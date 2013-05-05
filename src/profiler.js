@@ -30,9 +30,10 @@
     /**
      * Add new record
      * @param name {String} Record name
+     * @param tags {Array} List of tags
      */
-    start: function (name) {
-      var record = new Record(name, name);
+    start: function (name, tags) {
+      var record = new Record(name, name, tags || ['script']);
       records.push(record);
       index[name] = record;
     },
@@ -51,7 +52,7 @@
      * Alias for `stop`
      */
     end: function () {
-      this.stop.call(this, arguments);
+      this.stop.apply(this, arguments);
     },
 
 
@@ -121,9 +122,8 @@
 
 
   var getTiming = function () {
-    var timing;
     if (supportsTiming) {
-      timing = {};
+      var timing = {};
       each(window.performance.timing, function (value, key) {
         if (value > 0) {
           timing[key] = value - start;

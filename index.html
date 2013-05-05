@@ -8,10 +8,12 @@
 		</script>
 		<script src="build/profiler.js"></script>
     <script>
+      profiler.start('test a');
       var i = 1000000;
       while (i--) {
         var b = i * i;
       }
+      profiler.end('test a');
     </script>
 	</head>
 	<body>

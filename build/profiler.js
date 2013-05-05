@@ -164,9 +164,10 @@ var off = (function (doc) {
 //
 var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
-var Record = function (key, name) {
+var Record = function (key, name, tags) {
   this.key = key;
   this.name = name;
+  this.tags = tags;
   this.start = (new Date()).valueOf() - start;
   this.completed = false;
 };
@@ -214,9 +215,10 @@ Record.prototype = {
     /**
      * Add new record
      * @param name {String} Record name
+     * @param tags {Array} List of tags
      */
-    start: function (name) {
-      var record = new Record(name, name);
+    start: function (name, tags) {
+      var record = new Record(name, name, tags || ['script']);
       records.push(record);
       index[name] = record;
     },
@@ -235,7 +237,7 @@ Record.prototype = {
      * Alias for `stop`
      */
     end: function () {
-      this.stop.call(this, arguments);
+      this.stop.apply(this, arguments);
     },
 
 
@@ -305,9 +307,8 @@ Record.prototype = {
 
 
   var getTiming = function () {
-    var timing;
     if (supportsTiming) {
-      timing = {};
+      var timing = {};
       each(window.performance.timing, function (value, key) {
         if (value > 0) {
           timing[key] = value - start;

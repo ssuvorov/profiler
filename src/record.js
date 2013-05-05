@@ -1,8 +1,9 @@
 var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
-var Record = function (key, name) {
+var Record = function (key, name, tags) {
   this.key = key;
   this.name = name;
+  this.tags = tags;
   this.start = (new Date()).valueOf() - start;
   this.completed = false;
 };
