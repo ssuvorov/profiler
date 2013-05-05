@@ -1,15 +1,4 @@
-var start;
-
-if (window.__profiler__start__) {
-  start = window.__profiler__start__;
-  try {
-    delete window.__profiler__start__;
-  } catch (e) {
-    //
-  }
-} else {
-  start = (new Date()).valueOf();
-}
+var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
 var Record = (function () {
   return function (key, name) {

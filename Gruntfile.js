@@ -13,6 +13,8 @@ module.exports = function(grunt) {
             'src/lang/typeof.js',
             'src/lang/each.js',
             'src/lang/filter.js',
+            'src/dom/event.js',
+            'src/provider/http.js',
             'src/record.js',
             'src/profiler.js'
           ]
@@ -24,6 +26,8 @@ module.exports = function(grunt) {
 						'src/lang/typeof.js',
 						'src/lang/each.js',
 						'src/lang/filter.js',
+						'src/dom/event.js',
+            'src/provider/http.js',
 						'src/record.js',
 						'src/profiler.js'
 					]

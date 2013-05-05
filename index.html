@@ -7,6 +7,12 @@
 			window.__profiler__start__ = (new Date()).valueOf();
 		</script>
 		<script src="build/profiler.js"></script>
+    <script>
+      var i = 1000000;
+      while (i--) {
+        var b = i * i;
+      }
+    </script>
 	</head>
 	<body>
 		Hello

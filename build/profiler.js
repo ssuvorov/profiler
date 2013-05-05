@@ -77,18 +77,74 @@ var filter = (function (each, typeOf) {
     return result;
   };
 }(each, typeOf));
-var start;
+/**
+ * Attach event
+ */
+var on = (function (doc) {
+  var slice = [].slice;
+  var supportW3C = 'addEventListener' in doc;
+  var on;
 
-if (window.__profiler__start__) {
-  start = window.__profiler__start__;
-  try {
-    delete window.__profiler__start__;
-  } catch (e) {
-    //
+  if (supportW3C) {
+    on = function (elem, eventName, handler, capture) {
+      return elem.addEventListener(eventName, handler, capture || false);
+    };
+  } else {
+    // todo: store links to original functions
+//    var fixEvent = function (evt) {
+//      // todo: fix event object
+//      return evt;
+//    };
+//
+//    var createHandler = function (handler) {
+//      return function () {
+//        var args = slice.apply(arguments);
+//        args[0] = fixEvent(args[0]);
+//        handler.call(this, args);
+//      }
+//    };
+//
+//    if ('attachEvent' in doc) {
+//      on = function (elem, eventName, handler) {
+//        return elem.attachEvent('on' + eventName, createHandler(handler));
+//      }
+//    } else {
+//      on = function (elem, eventName, handler) {
+//        elem['on' + eventName] = createHandler(handler);
+//      }
+//    }
   }
-} else {
-  start = (new Date()).valueOf();
-}
+
+  return on;
+}(window.document));
+
+
+/**
+ * Detach event
+ */
+var off = (function (doc) {
+  var supportW3C = 'removeEventListener' in doc;
+  var off;
+
+  if (supportW3C) {
+    off = function (elem, eventName, handler) {
+      return elem.removeEventListener(eventName, handler);
+    };
+  } else {
+    // todo: implement
+//    if ('detachEvent' in doc) {
+//      off = function (elem, eventName, handler) {
+//        return elem.detachEvent(eventName, handler);
+//      }
+//    } else {
+//
+//    }
+  }
+
+  return off;
+}(window.document));
+//
+var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
 var Record = (function () {
   return function (key, name) {
@@ -110,32 +166,26 @@ Record.prototype = {
     return this.name + ' ' + this.start + '-' + this.end + ' (' + this.duration + ')';
   }
 };
-(function (each, filter) {
+(function (each, filter, on, off, Record) {
+  var win = window;
+  var doc = win.document;
+
+  var supportsTiming = ('performance' in win && 'timing' in win.performance);
+
+  var EVT_DOM_READY = 'DOMContentLoaded';
+  var EVT_LOAD = 'load';
+
+  var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
+
+  var domReady, windowLoad;
+
   var records = [];
   var index = {};
 
-  var buildIndex = function () {
-    var index = {};
-    each(records, function (record) {
-      index[record.key] = record;
-    });
-    return index;
-  };
-
-  var getCompleted = function () {
-    return filter(records, function (record) {
-      return record.completed === true;
-    });
-  };
-
-  var getPending = function () {
-    return filter(records, function (record) {
-      return record.completed === false;
-    });
-  };
-
-
-  window.profiler = {
+  /**
+   * Profiler
+   */
+  win.profiler = {
     /**
      * Remove all completed records
      */
@@ -178,7 +228,10 @@ Record.prototype = {
      */
     report: function () {
       return {
-        records: getCompleted()
+        onready: domReady,
+        records: getCompleted(),
+        timing: getTiming(),
+        onload: windowLoad
       };
     },
 
@@ -207,5 +260,66 @@ Record.prototype = {
       //
     }
   };
-}(each, filter));
+
+
+
+  /*** Helpers ***/
+
+  var buildIndex = function () {
+    var index = {};
+    each(records, function (record) {
+      index[record.key] = record;
+    });
+    return index;
+  };
+
+
+  var getCompleted = function () {
+    return filter(records, function (record) {
+      return record.completed === true;
+    });
+  };
+
+
+  var getPending = function () {
+    return filter(records, function (record) {
+      return record.completed === false;
+    });
+  };
+
+
+  var getTiming = function () {
+    var timing;
+
+    if (supportsTiming) {
+      timing = {};
+      each(window.performance.timing, function (value, key) {
+        if (value > 0) {
+          timing[key] = value - start;
+        }
+      });
+    }
+    console.log(timing);
+    return timing || null;
+  };
+
+
+  var onLoad = function () {
+    off(win, EVT_LOAD, onLoad);
+    windowLoad = (new Date()).valueOf() - start;
+  };
+
+
+  var onDomReady = function () {
+    off(doc, EVT_DOM_READY, onDomReady);
+    domReady = (new Date()).valueOf() - start;
+  };
+
+
+  /*** Listen events ***/
+
+  on(doc, EVT_DOM_READY, onDomReady);
+  on(win, EVT_LOAD, onLoad);
+
+}(each, filter, on, off, Record));
 }());
