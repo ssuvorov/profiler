@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 		},
 
 		concat: {
-      dev: {
+      build: {
         files: {
           'build/profiler.js': [
             'src/lang/typeof.js',
@@ -36,8 +36,8 @@ module.exports = function(grunt) {
 		},
 
 		jasmine: {
-			coverage: {
-				src: 'build/profiler.test.js',
+			dev: {
+				src: 'build/profiler.js',
 				options: {
 					specs: 'test/specs/profiler.spec.js',
 					template: require('grunt-template-jasmine-istanbul'),
@@ -53,11 +53,29 @@ module.exports = function(grunt) {
 						]
 					}
 				}
-			}
+			},
+      prod: {
+        src: 'build/profiler.min.js',
+        options: {
+          specs: 'test/specs/profiler.spec.js',
+          template: require('grunt-template-jasmine-istanbul'),
+          templateOptions: {
+            coverage: 'test/report/coverage.json',
+            report: [
+              {
+                type: 'html',
+                options: {
+                  dir: 'test/report/html'
+                }
+              }
+            ]
+          }
+        }
+      }
 		},
 
     jshint: {
-      dev: [
+      alldev: [
         'Gruntfile.js',
         'build/profiler.js'
       ],
@@ -66,8 +84,20 @@ module.exports = function(grunt) {
       }
     },
 
+    uglify: {
+      prod: {
+        files: {
+          'build/profiler.min.js': ['build/profiler.js']
+        },
+        options: {
+          mangle: false,
+          report: 'gzip'
+        }
+      }
+    },
+
     wrap: {
-      dev: {
+      all: {
         src: ['build/profiler.js'],
         dest: '',
         wrapper: [
@@ -78,12 +108,18 @@ module.exports = function(grunt) {
     }
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks('grunt-wrap');
 
-	grunt.registerTask('test', ['concat:test', 'jasmine', 'clean:test']);
-	grunt.registerTask('default', ['concat:dev', 'wrap:dev', 'jshint:dev']);
+	grunt.registerTask('build-dev', ['concat:build', 'wrap:all']);
+	grunt.registerTask('build-prod', ['build-dev', 'uglify:prod']);
+	grunt.registerTask('test-dev', ['build-dev', 'jasmine:dev']);
+	grunt.registerTask('test-prod', ['build-prod', 'jasmine:prod']);
+
+	grunt.registerTask('test', ['test-dev']);
+	grunt.registerTask('prod', ['build-prod']);
+	grunt.registerTask('default', ['build-dev']);
 };

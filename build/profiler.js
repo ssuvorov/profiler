@@ -290,7 +290,6 @@ Record.prototype = {
 
   var getTiming = function () {
     var timing;
-
     if (supportsTiming) {
       timing = {};
       each(window.performance.timing, function (value, key) {
@@ -299,7 +298,6 @@ Record.prototype = {
         }
       });
     }
-    console.log(timing);
     return timing || null;
   };
 

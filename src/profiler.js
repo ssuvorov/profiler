@@ -122,7 +122,6 @@
 
   var getTiming = function () {
     var timing;
-
     if (supportsTiming) {
       timing = {};
       each(window.performance.timing, function (value, key) {
@@ -131,7 +130,6 @@
         }
       });
     }
-    console.log(timing);
     return timing || null;
   };
 
