@@ -5,61 +5,65 @@
 
   window.profiler = {
     /**
-     *
+     * Remove all completed records
      */
     clear: function () {
 
     },
 
+
     /**
-     * @public
-     * TBD
+     * Add new record
+     * @param name {String} Record name
      */
     start: function (name) {
       //
     },
 
-    /**
-     *
-     */
-    stop: function () {
-      this.end.call(this, arguments);
-    },
 
     /**
-     * @public
-     * TBD
+     * Stop record by name
+     * @param name {String} Record name
      */
-    end: function (name) {
+    stop: function (name) {
       //
     },
 
+
     /**
-     * @public
-     * TBD
+     * Alias for `stop`
+     */
+    end: function (name) {
+      this.stop.call(this, arguments);
+    },
+
+
+    /**
+     * Returns records
      */
     report: function () {
       return records;
     },
 
+
     /**
-     * @public
-     * TBD
+     * Reset profiler to default state
      */
     reset: function () {
       //
     },
 
+
     /**
-     * @public
-     * TBD
+     * Send report to server
      */
     send: function () {
       //
     },
 
+
     /**
-     * @public TBD
+     * Setup profiler
      */
     setup: function () {
       //
