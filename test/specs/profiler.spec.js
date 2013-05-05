@@ -16,15 +16,19 @@
       profiler.reset();
     });
 
+
+    // existing
     it('exist', function () {
       expect(profiler).toBeDefined();
     });
 
+
+    // add record
     it('record', function () {
       profiler.start('test');
-
-      profiler.stop('test');
       longOperation();
+      profiler.stop('test');
+
       var records = profiler.report().records;
 
       expect(records.length).toBe(1);
@@ -35,18 +39,20 @@
       expect(records[0].duration).toBeGreaterThan(0);
     });
 
+
     // reset
     it('reset', function () {
       profiler.reset();
-      expect(profiler.report().length).toBe(0);
+      expect(profiler.report().records.length).toBe(0);
     });
 
+
     // many records
-    it('records', function () {
+    it('many records', function () {
       profiler.start('test a');
       for (var i = 0, a; i < 1000000; i++) {
         a = i*i;
-        if (i === 30) {
+        if (i === 500000) {
           profiler.start('test b');
         }
       }
@@ -73,6 +79,7 @@
       expect(records[1].end).toBeGreaterThan(records[1].start);
       expect(records[2].end).toBeGreaterThan(records[2].start);
     });
+
 
     // async records
     it('async records', function () {
@@ -123,6 +130,7 @@
       });
     });
 
+
     // some records have the same name
     it('some records have the same name', function () {
       var done;
@@ -172,6 +180,7 @@
       });
     });
 
+
     // report contains only completed records
     it('not completed records in report', function () {
       profiler.start('test a');
@@ -183,6 +192,7 @@
       expect(records.length).toBe(1);
       expect(records[0].name).toBe('test b');
     });
+
 
     // clear
     it('clear', function () {

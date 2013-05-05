@@ -9,6 +9,10 @@ module.exports = function(grunt) {
 			test: {
 				files: {
 					'build/profiler.test.js': [
+						'src/lang/typeof.js',
+						'src/lang/each.js',
+						'src/lang/filter.js',
+
 						'src/record.js',
 						'src/profiler.js'
 					]
