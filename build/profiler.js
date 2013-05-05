@@ -14,9 +14,7 @@ var typeOf = (function (){
     if (arg === null) {
       return 'null';
     }
-    return typeof arg === 'object' || typeof arg === 'function'
-      ? class2type[objectToString.call(arg)] || 'object'
-      : typeof arg;
+    return typeof arg === 'object' || typeof arg === 'function' ? class2type[objectToString.call(arg)] || 'object' : typeof arg;
   };
 }());
 
@@ -77,7 +75,7 @@ var filter = (function (each, typeOf) {
     }
 
     return result;
-  }
+  };
 }(each, typeOf));
 var start;
 

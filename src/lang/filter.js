@@ -26,5 +26,5 @@ var filter = (function (each, typeOf) {
     }
 
     return result;
-  }
+  };
 }(each, typeOf));

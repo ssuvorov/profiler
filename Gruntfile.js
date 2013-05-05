@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  'use strict';
 
 	grunt.initConfig({
 		clean: {
@@ -52,7 +53,7 @@ module.exports = function(grunt) {
 		},
 
     jshint: {
-      all: [
+      dev: [
         'Gruntfile.js',
         'build/profiler.js'
       ],
@@ -76,9 +77,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jasmine');
-  //grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks('grunt-wrap');
 
 	grunt.registerTask('test', ['concat:test', 'jasmine', 'clean:test']);
-	grunt.registerTask('default', ['concat:dev', 'wrap:dev']);
+	grunt.registerTask('default', ['concat:dev', 'wrap:dev', 'jshint:dev']);
 };
