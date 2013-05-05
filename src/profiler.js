@@ -151,4 +151,12 @@
   on(doc, EVT_DOM_READY, onDomReady);
   on(win, EVT_LOAD, onLoad);
 
+
+  /*** Clean-up ***/
+
+  try {
+    delete window.__profiler__start__;
+  } catch (e) {
+    //
+  }
 }(each, filter, on, off, Record));

@@ -1,6 +1,11 @@
 ;(function (undefined) {
 'use strict';
-var typeOf = (function (){
+/**
+ * Replacing typeof
+ * @param arg {*} Any argument
+ * @return {String} Type of argument
+ */
+var typeOf = (function () {
   var objectToString = Object.prototype.toString;
   var class2type = {};
   var classNames = ['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Object', 'Error'];
@@ -20,8 +25,11 @@ var typeOf = (function (){
 
 /**
  * @require typeOf
+ *
  * Iterates through array or object
  * If first argument has a plain type callback will be invoked once
+ *
+ * @TODO: optimize by creating different versions depends on browser support
  */
 var each = (function (typeOf) {
   var supportsForEach = 'forEach' in Array.prototype;
@@ -30,7 +38,7 @@ var each = (function (typeOf) {
     var type = typeOf(obj);
     if (type === 'array') {
       if (supportsForEach) {
-        obj.forEach(fn, ctx || window);
+        obj.forEach(fn, ctx);
       } else {
         for (var i = 0, len = obj.length; i < len; i++) {
           fn.call(ctx, obj[i], i);
@@ -47,6 +55,16 @@ var each = (function (typeOf) {
     }
   };
 }(typeOf));
+/**
+ * Filter array or object
+ * @todo: optimize by creating different versions depends on browser support
+ *
+ * @param arg {Array|Object}
+ * @param fn {Function} Callback for filtering
+ * @param ctx {Object} Context for callback. Optional
+ *
+ * @return {Array|Object} New array or object contains filtered items
+ */
 var filter = (function (each, typeOf) {
   var supportsFilter = 'filter' in Array.prototype;
 
@@ -146,14 +164,12 @@ var off = (function (doc) {
 //
 var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
-var Record = (function () {
-  return function (key, name) {
-    this.key = key;
-    this.name = name;
-    this.start = (new Date()).valueOf() - start;
-    this.completed = false;
-  };
-}());
+var Record = function (key, name) {
+  this.key = key;
+  this.name = name;
+  this.start = (new Date()).valueOf() - start;
+  this.completed = false;
+};
 
 Record.prototype = {
   complete: function () {
@@ -162,7 +178,7 @@ Record.prototype = {
     this.completed = true;
   },
 
-  toString: function (){
+  toString: function () {
     return this.name + ' ' + this.start + '-' + this.end + ' (' + this.duration + ')';
   }
 };
@@ -319,5 +335,13 @@ Record.prototype = {
   on(doc, EVT_DOM_READY, onDomReady);
   on(win, EVT_LOAD, onLoad);
 
+
+  /*** Clean-up ***/
+
+  try {
+    delete window.__profiler__start__;
+  } catch (e) {
+    //
+  }
 }(each, filter, on, off, Record));
 }());
