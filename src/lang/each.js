@@ -11,6 +11,7 @@ var each = (function (typeOf) {
 
   return function (obj, fn, ctx) {
     var type = typeOf(obj);
+
     if (type === 'array') {
       if (supportsForEach) {
         obj.forEach(fn, ctx);
@@ -21,9 +22,7 @@ var each = (function (typeOf) {
       }
     } else if (type === 'object') {
       for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          fn.call(ctx, obj[key], key);
-        }
+        fn.call(ctx, obj[key], key);
       }
     } else {
       fn.call(ctx, obj);

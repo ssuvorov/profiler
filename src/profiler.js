@@ -122,15 +122,16 @@
 
 
   var getTiming = function () {
+    var timing = null;
     if (supportsTiming) {
-      var timing = {};
+      timing = {};
       each(window.performance.timing, function (value, key) {
         if (value > 0) {
           timing[key] = value - start;
         }
       });
     }
-    return timing || null;
+    return timing;
   };
 
 

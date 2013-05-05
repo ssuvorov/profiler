@@ -36,6 +36,7 @@ var each = (function (typeOf) {
 
   return function (obj, fn, ctx) {
     var type = typeOf(obj);
+
     if (type === 'array') {
       if (supportsForEach) {
         obj.forEach(fn, ctx);
@@ -46,9 +47,7 @@ var each = (function (typeOf) {
       }
     } else if (type === 'object') {
       for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          fn.call(ctx, obj[key], key);
-        }
+        fn.call(ctx, obj[key], key);
       }
     } else {
       fn.call(ctx, obj);
@@ -307,15 +306,16 @@ Record.prototype = {
 
 
   var getTiming = function () {
+    var timing = null;
     if (supportsTiming) {
-      var timing = {};
+      timing = {};
       each(window.performance.timing, function (value, key) {
         if (value > 0) {
           timing[key] = value - start;
         }
       });
     }
-    return timing || null;
+    return timing;
   };
 
 

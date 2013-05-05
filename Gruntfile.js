@@ -121,5 +121,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('test', ['test-dev']);
 	grunt.registerTask('prod', ['build-prod']);
+	grunt.registerTask('hint', ['build-dev', 'jshint']);
 	grunt.registerTask('default', ['build-dev']);
 };
