@@ -1,44 +1,68 @@
-var start = profiler.start.valueOf();
+(function () {
+  var start = window.__profiler__start__ || (new Date()).valueOf();
 
-window.profiler = {
-	/**
-	 * @public
-	 * TBD
-	 */
-	start: function () {
-		//
-	},
+  var records = {};
 
-	/**
-	 * @public
-	 * TBD
-	 */
-	end: function () {
-		//
-	},
+  window.profiler = {
+    /**
+     *
+     */
+    clear: function () {
 
-	/**
-	 * @public
-	 * TBD
-	 */
-	report: function () {
-		//
-	},
+    },
 
+    /**
+     * @public
+     * TBD
+     */
+    start: function (name) {
+      //
+    },
 
-	/**
-	 * @public
-	 * TBD
-	 */
-	reset: function () {
-		//
-	},
+    /**
+     *
+     */
+    stop: function () {
+      this.end.call(this, arguments);
+    },
 
-	/**
-	 * @public
-	 * TBD
-	 */
-	send: function () {
-		//
-	}
-};
+    /**
+     * @public
+     * TBD
+     */
+    end: function (name) {
+      //
+    },
+
+    /**
+     * @public
+     * TBD
+     */
+    report: function () {
+      return records;
+    },
+
+    /**
+     * @public
+     * TBD
+     */
+    reset: function () {
+      //
+    },
+
+    /**
+     * @public
+     * TBD
+     */
+    send: function () {
+      //
+    },
+
+    /**
+     * @public TBD
+     */
+    setup: function () {
+      //
+    }
+  };
+}());
