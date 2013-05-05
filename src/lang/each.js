@@ -1,7 +1,10 @@
 /**
  * @require typeOf
+ *
  * Iterates through array or object
  * If first argument has a plain type callback will be invoked once
+ *
+ * @TODO: optimize by creating different versions depends on browser support
  */
 var each = (function (typeOf) {
   var supportsForEach = 'forEach' in Array.prototype;
@@ -10,7 +13,7 @@ var each = (function (typeOf) {
     var type = typeOf(obj);
     if (type === 'array') {
       if (supportsForEach) {
-        obj.forEach(fn, ctx || window);
+        obj.forEach(fn, ctx);
       } else {
         for (var i = 0, len = obj.length; i < len; i++) {
           fn.call(ctx, obj[i], i);

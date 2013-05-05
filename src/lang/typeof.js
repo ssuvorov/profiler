@@ -1,4 +1,9 @@
-var typeOf = (function (){
+/**
+ * Replacing typeof
+ * @param arg {*} Any argument
+ * @return {String} Type of argument
+ */
+var typeOf = (function () {
   var objectToString = Object.prototype.toString;
   var class2type = {};
   var classNames = ['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Object', 'Error'];

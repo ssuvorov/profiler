@@ -1,3 +1,13 @@
+/**
+ * Filter array or object
+ * @todo: optimize by creating different versions depends on browser support
+ *
+ * @param arg {Array|Object}
+ * @param fn {Function} Callback for filtering
+ * @param ctx {Object} Context for callback. Optional
+ *
+ * @return {Array|Object} New array or object contains filtered items
+ */
 var filter = (function (each, typeOf) {
   var supportsFilter = 'filter' in Array.prototype;
 
