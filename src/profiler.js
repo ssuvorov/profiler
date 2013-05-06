@@ -1,13 +1,9 @@
-(function (each, filter, on, off, Record) {
+(function (each, filter, on, off, start, Record) {
   var win = window;
   var doc = win.document;
 
-  var supportsTiming = ('performance' in win && 'timing' in win.performance);
-
   var EVT_DOM_READY = 'DOMContentLoaded';
   var EVT_LOAD = 'load';
-
-  var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
   var domReady, windowLoad;
 
@@ -160,4 +156,4 @@
   } catch (e) {
     //
   }
-}(each, filter, on, off, Record));
+}(each, filter, on, off, start, Record));

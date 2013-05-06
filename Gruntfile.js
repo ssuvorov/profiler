@@ -15,6 +15,7 @@ module.exports = function(grunt) {
             'src/lang/filter.js',
             'src/dom/event.js',
             'src/provider/http.js',
+            'src/start.js',
             'src/record.js',
             'src/profiler.js'
           ]
@@ -28,6 +29,7 @@ module.exports = function(grunt) {
 						'src/lang/filter.js',
 						'src/dom/event.js',
             'src/provider/http.js',
+						'src/start.js',
 						'src/record.js',
 						'src/profiler.js'
 					]

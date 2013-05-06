@@ -161,8 +161,14 @@ var off = (function (doc) {
   return off;
 }(window.document));
 //
-var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
+var start;
+var supportsTiming = ('performance' in window && 'timing' in window.performance);
 
+if (supportsTiming && window.performance.timing.navigationStart) {
+  start = window.performance.timing.navigationStart;
+} else {
+  start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
+}
 var Record = function (key, name, tags) {
   this.key = key;
   this.name = name;
@@ -182,16 +188,12 @@ Record.prototype = {
     return this.name + ' ' + this.start + '-' + this.end + ' (' + this.duration + ')';
   }
 };
-(function (each, filter, on, off, Record) {
+(function (each, filter, on, off, start, Record) {
   var win = window;
   var doc = win.document;
 
-  var supportsTiming = ('performance' in win && 'timing' in win.performance);
-
   var EVT_DOM_READY = 'DOMContentLoaded';
   var EVT_LOAD = 'load';
-
-  var start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 
   var domReady, windowLoad;
 
@@ -344,5 +346,5 @@ Record.prototype = {
   } catch (e) {
     //
   }
-}(each, filter, on, off, Record));
+}(each, filter, on, off, start, Record));
 }());

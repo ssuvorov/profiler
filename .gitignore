@@ -1,3 +1,5 @@
 node_modules
 .idea
 .grunt
+_SpecRunner.html
+test/report
