@@ -10,6 +10,10 @@
   var records = [];
   var index = {};
 
+  var session = (new Date()).valueOf() + (Math.random() * 1000|0);
+  var url;
+
+
   /**
    * Profiler
    */
@@ -78,15 +82,20 @@
      * Send report to server
      */
     send: function () {
-      //
+      if (url) {
+        var report = this.report();
+        report.session = session;
+        http.post(url, report);
+      }
     },
 
 
     /**
      * Setup profiler
      */
-    setup: function () {
-      //
+    setup: function (params) {
+      url = params.url || url;
+      session = params.session || session;
     }
   };
 
