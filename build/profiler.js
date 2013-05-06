@@ -259,6 +259,7 @@ Record.prototype = {
   var domReady, windowLoad;
 
   var records = [];
+  var count = {};
   var index = {};
 
   var session = (new Date()).valueOf() + (Math.random() * 1000|0);
@@ -277,6 +278,15 @@ Record.prototype = {
       index = buildIndex();
     },
 
+
+    /**
+     * Count something
+     * @param name {String} Name of counting object
+     */
+    count: function (name) {
+      count[name] = count[name] || 0;
+      count[name]++;
+    },
 
     /**
      * Add new record
@@ -313,6 +323,7 @@ Record.prototype = {
     report: function () {
       return {
         onready: domReady,
+        count: count,
         records: getCompleted(),
         timing: getTiming(),
         onload: windowLoad
@@ -326,6 +337,7 @@ Record.prototype = {
     reset: function () {
       records = [];
       index = {};
+      count = {};
     },
 
 

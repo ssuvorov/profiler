@@ -43,7 +43,9 @@
     // reset
     it('reset', function () {
       profiler.reset();
-      expect(profiler.report().records.length).toBe(0);
+      var report = profiler.report();
+      expect(report.records.length).toBe(0);
+      expect(Object.keys(report.records).length).toBe(0);
     });
 
 
@@ -206,6 +208,26 @@
       var records = profiler.report().records;
       expect(records.length).toBe(1);
       expect(records[0].name).toBe('test a');
+
+      // what to do with counts?
+    });
+
+
+    // count
+    it('count', function () {
+      profiler.count('test a');
+      profiler.start('test a'); // shouldn't be incremented
+      profiler.count('test b');
+      profiler.count('test c');
+      profiler.count('test a');
+      profiler.count('test b');
+      profiler.end('test a');
+
+      var count = profiler.report().count;
+
+      expect(count['test a']).toBe(2);
+      expect(count['test b']).toBe(2);
+      expect(count['test c']).toBe(1);
     });
 
     // setup
