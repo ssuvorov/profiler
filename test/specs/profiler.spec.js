@@ -223,11 +223,11 @@
       profiler.count('test b');
       profiler.end('test a');
 
-      var count = profiler.report().count;
+      var calls = profiler.report().calls;
 
-      expect(count['test a']).toBe(2);
-      expect(count['test b']).toBe(2);
-      expect(count['test c']).toBe(1);
+      expect(calls['test a']).toBe(2);
+      expect(calls['test b']).toBe(2);
+      expect(calls['test c']).toBe(1);
     });
 
     // setup

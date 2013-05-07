@@ -8,7 +8,7 @@
   var domReady, windowLoad;
 
   var records = [];
-  var count = {};
+  var calls = {};
   var index = {};
 
   var session = (new Date()).valueOf() + (Math.random() * 1000|0);
@@ -33,8 +33,8 @@
      * @param name {String} Name of counting object
      */
     count: function (name) {
-      count[name] = count[name] || 0;
-      count[name]++;
+      calls[name] = calls[name] || 0;
+      calls[name]++;
     },
 
     /**
@@ -72,7 +72,7 @@
     report: function () {
       return {
         onready: domReady,
-        count: count,
+        calls: calls,
         records: getCompleted(),
         timing: getTiming(),
         onload: windowLoad
