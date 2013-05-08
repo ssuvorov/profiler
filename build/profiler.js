@@ -438,8 +438,8 @@ Record.prototype = {
 
   var sendReport = function () {
     setTimeout(function () {
-      this.send();
-      this.clear();
+      win.profiler.send();
+      win.profiler.clear();
 
       sendReport();
     }, interval * 1000);
