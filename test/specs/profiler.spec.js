@@ -42,10 +42,22 @@
 
     // reset
     it('reset', function () {
+      profiler.start('test a');
+      profiler.start('test b');
+      profiler.count('test d');
+      profiler.stop('test a');
+      profiler.count('test e');
+      profiler.count('test f');
+      profiler.stop('test b');
+      profiler.count('test d');
+
       profiler.reset();
+
       var report = profiler.report();
+
       expect(report.records.length).toBe(0);
       expect(Object.keys(report.records).length).toBe(0);
+      expect(Object.keys(report.calls).length).toBe(0);
     });
 
 
@@ -213,8 +225,8 @@
     });
 
 
-    // count
-    it('count', function () {
+    // count calls
+    it('count calls', function () {
       profiler.count('test a');
       profiler.start('test a'); // shouldn't be incremented
       profiler.count('test b');

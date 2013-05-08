@@ -43,9 +43,11 @@
      * @param tags {Array} List of tags
      */
     start: function (name, tags) {
-      var record = new Record(name, name, tags || ['script']);
+      var record = new Record(name, tags || ['script']);
+
       records.push(record);
-      index[name] = record;
+      index[name] = index[name] || [];
+      index[name].push(record);
     },
 
 
@@ -54,7 +56,7 @@
      * @param name {String} Record name
      */
     stop: function (name) {
-      index[name].complete();
+      index[name].shift().complete();
     },
 
 
@@ -86,7 +88,7 @@
     reset: function () {
       records = [];
       index = {};
-      count = {};
+      calls = {};
     },
 
 
@@ -118,7 +120,9 @@
   var buildIndex = function () {
     var index = {};
     each(records, function (record) {
-      index[record.key] = record;
+      var name = record.name;
+      index[name] = index[name] || [];
+      index[name].push(record);
     });
     return index;
   };

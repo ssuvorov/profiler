@@ -1,5 +1,4 @@
-var Record = function (key, name, tags) {
-  this.key = key;
+var Record = function (name, tags) {
   this.name = name;
   this.tags = tags;
   this.start = (new Date()).valueOf() - start;

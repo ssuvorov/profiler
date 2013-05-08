@@ -230,8 +230,7 @@ if (supportsTiming && window.performance.timing.navigationStart) {
 } else {
   start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
 }
-var Record = function (key, name, tags) {
-  this.key = key;
+var Record = function (name, tags) {
   this.name = name;
   this.tags = tags;
   this.start = (new Date()).valueOf() - start;
@@ -294,9 +293,11 @@ Record.prototype = {
      * @param tags {Array} List of tags
      */
     start: function (name, tags) {
-      var record = new Record(name, name, tags || ['script']);
+      var record = new Record(name, tags || ['script']);
+
       records.push(record);
-      index[name] = record;
+      index[name] = index[name] || [];
+      index[name].push(record);
     },
 
 
@@ -305,7 +306,7 @@ Record.prototype = {
      * @param name {String} Record name
      */
     stop: function (name) {
-      index[name].complete();
+      index[name].shift().complete();
     },
 
 
@@ -337,7 +338,7 @@ Record.prototype = {
     reset: function () {
       records = [];
       index = {};
-      count = {};
+      calls = {};
     },
 
 
@@ -369,7 +370,9 @@ Record.prototype = {
   var buildIndex = function () {
     var index = {};
     each(records, function (record) {
-      index[record.key] = record;
+      var name = record.name;
+      index[name] = index[name] || [];
+      index[name].push(record);
     });
     return index;
   };
