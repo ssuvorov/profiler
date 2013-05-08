@@ -14,6 +14,7 @@
   describe('profiler', function () {
     beforeEach(function () {
       profiler.reset();
+      spyOn(profiler, 'send');
     });
 
 
@@ -242,14 +243,16 @@
       expect(calls['test c']).toBe(1);
     });
 
+
+    // send every n seconds
+    it('reporting to server', function () {
+      // TBD
+    });
+
+
     // setup
-//    it('setup', function () {
-//      //
-//    });
-
-    // tags
-    // reflow
-    //
-
+    it('setup', function () {
+      // TBD
+    });
   });
 }());

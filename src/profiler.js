@@ -12,7 +12,9 @@
   var index = {};
 
   var session = (new Date()).valueOf() + (Math.random() * 1000|0);
+
   var url;
+  var interval = 30;
 
 
   /**
@@ -110,9 +112,17 @@
     setup: function (params) {
       url = params.url || url;
       session = params.session || session;
+      interval = params.interval || interval;
+    },
+
+
+    /**
+     * Starts reporting to server every `interval` seconds
+     */
+    startReporting: function () {
+      sendReport();
     }
   };
-
 
 
   /*** Helpers ***/
@@ -172,6 +182,18 @@
 
   on(doc, EVT_DOM_READY, onDomReady);
   on(win, EVT_LOAD, onLoad);
+
+
+  /** start reporting */
+
+  var sendReport = function () {
+    setTimeout(function () {
+      this.send();
+      this.clear();
+
+      sendReport();
+    }, interval * 1000);
+  };
 
 
   /*** Clean-up ***/
