@@ -213,16 +213,18 @@
     it('clear', function () {
       profiler.start('test a');
       profiler.start('test b');
+      profiler.count('test count a');
       longOperation();
       profiler.stop('test b');
+      profiler.count('test count b');
       profiler.clear();
       profiler.stop('test a');
 
-      var records = profiler.report().records;
-      expect(records.length).toBe(1);
-      expect(records[0].name).toBe('test a');
+      var report = profiler.report();
 
-      // what to do with counts?
+      expect(report.records.length).toBe(1);
+      expect(Object.keys(report.calls).length).toBe(0);
+      expect(report.records[0].name).toBe('test a');
     });
 
 

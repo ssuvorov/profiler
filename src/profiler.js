@@ -27,6 +27,7 @@
     clear: function () {
       records = getPending();
       index = buildIndex();
+      calls = {};
     },
 
 

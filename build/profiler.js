@@ -277,6 +277,7 @@ Record.prototype = {
     clear: function () {
       records = getPending();
       index = buildIndex();
+      calls = {};
     },
 
 
