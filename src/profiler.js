@@ -98,6 +98,7 @@
       return {
         onready: domReady,
         calls: calls,
+        memory: getMemoryInfo(),
         records: getCompleted(),
         timing: getTiming(),
         onload: windowLoad
@@ -184,6 +185,11 @@
       });
     }
     return timing;
+  };
+
+
+  var getMemoryInfo = function () {
+    return supportsMemory ? win.performance.memory : null;
   };
 
 

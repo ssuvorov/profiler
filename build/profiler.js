@@ -223,7 +223,9 @@ var http = (function () {
   };
 }());
 var start;
-var supportsTiming = ('performance' in window && 'timing' in window.performance);
+var supportsPerformance = ('performance' in window);
+var supportsTiming = (supportsPerformance && 'timing' in window.performance);
+var supportsMemory = (supportsPerformance && 'memory' in window.performance);
 
 if (supportsTiming && window.performance.timing.navigationStart) {
   start = window.performance.timing.navigationStart;
@@ -348,6 +350,7 @@ Record.prototype = {
       return {
         onready: domReady,
         calls: calls,
+        memory: getMemoryInfo(),
         records: getCompleted(),
         timing: getTiming(),
         onload: windowLoad
@@ -434,6 +437,11 @@ Record.prototype = {
       });
     }
     return timing;
+  };
+
+
+  var getMemoryInfo = function () {
+    return supportsMemory ? win.performance.memory : null;
   };
 
 
