@@ -40,6 +40,19 @@
       calls[name]++;
     },
 
+
+    /**
+     * Meter reflow using zero timeout
+     * @param name {String} Record name
+     * @param tags {Array} List of tags
+     */
+    reflow: function (name, tags) {
+      tags = tags || ['reflow'];
+      this.start(name, tags);
+      this.stop(name, true);
+    },
+
+
     /**
      * Add new record
      * @param name {String} Record name
@@ -57,9 +70,16 @@
     /**
      * Stop record by name
      * @param name {String} Record name
+     * @param async {Boolean} If true record will be stopped in zero timeout
      */
-    stop: function (name) {
-      index[name].shift().complete();
+    stop: function (name, async) {
+      if (async) {
+        setTimeout(function () {
+          index[name].shift().complete();
+        }, 0);
+      } else {
+        index[name].shift().complete();
+      }
     },
 
 

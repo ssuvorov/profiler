@@ -11,6 +11,12 @@
     }
   };
 
+  var longLongOperation = function () {
+    for (var i = 0; i < 10; i++) {
+      longOperation();
+    }
+  };
+
   describe('profiler', function () {
     beforeEach(function () {
       profiler.reset();
@@ -142,6 +148,51 @@
         expect(Math.abs(records[0].duration - 1000)).toBeLessThan(100);
         expect(Math.abs(records[1].duration - 2500)).toBeLessThan(100);
         expect(Math.abs(records[2].duration - 1500)).toBeLessThan(100);
+      });
+    });
+
+
+    // async stop
+    it('async stop', function () {
+      profiler.start('test async a');
+      profiler.start('test async b');
+      longOperation();
+      profiler.stop('test async a', true);
+      profiler.stop('test async b');
+      longLongOperation();
+
+      waitsFor(function () {
+        return profiler.report().records.length === 2;
+      });
+
+      runs(function () {
+        var records = profiler.report().records;
+        expect(records[0].name).toBe('test async a');
+        expect(records[1].name).toBe('test async b');
+        expect(records[0].duration).toBeGreaterThan(records[1].duration);
+        //expect(records[0].end).toBeGreaterThan(timestamp);
+      });
+    });
+
+
+    // reflow
+    it('reflow', function () {
+      profiler.start('test');
+      longOperation();
+      profiler.reflow('test reflow');
+      profiler.end('test');
+      longLongOperation();
+
+      waitsFor(function () {
+        return profiler.report().records.length === 2;
+      });
+
+      runs(function () {
+        var records = profiler.report().records;
+        expect(records[0].name).toBe('test');
+        expect(records[1].name).toBe('test reflow');
+        expect(records[1].duration).toBeGreaterThan(records[0].duration);
+        expect(records[1].tags[0]).toBe('reflow');
       });
     });
 
