@@ -307,5 +307,17 @@
     it('setup', function () {
       // TBD
     });
+
+
+    // report on send
+    it('report on send', function () {
+      // TBD
+    });
+
+
+    // timing
+    it('timing', function () {
+      // TBD
+    });
   });
 }());

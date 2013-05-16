@@ -10,6 +10,7 @@
   var records = [];
   var calls = {};
   var index = {};
+  var timing = {};
 
   var session = (new Date()).valueOf() + (Math.random() * 1000|0);
 
@@ -30,6 +31,7 @@
       records = getPending();
       index = buildIndex();
       calls = {};
+      timing = {};
     },
 
 
@@ -115,6 +117,7 @@
       records = [];
       index = {};
       calls = {};
+      timing = {};
     },
 
 
@@ -124,8 +127,13 @@
     send: function () {
       if (url) {
         var report = this.report();
-        report.session = session;
-        http.post(url, report);
+        http.post(url, {
+          calls: report.calls,
+          memory: report.memory,
+          records: report.records,
+          session: session,
+          timing: timing
+        });
       }
     },
 
@@ -203,6 +211,9 @@
   var onLoad = function () {
     off(win, EVT_LOAD, onLoad);
     windowLoad = (new Date()).valueOf() - start;
+    setTimeout(function () {
+      timing = getTiming();
+    }, 0);
   };
 
 
