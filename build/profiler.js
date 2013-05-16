@@ -267,6 +267,8 @@ Record.prototype = {
 
   var url;
   var interval = 30;
+  var firstInterval = 10;
+  var _interval;
 
 
   /**
@@ -387,6 +389,9 @@ Record.prototype = {
       url = params.url || url;
       session = params.session || session;
       interval = params.interval || interval;
+      firstInterval = params.firstInterval || firstInterval;
+
+      _interval = interval;
     },
 
 
@@ -394,7 +399,9 @@ Record.prototype = {
      * Starts reporting to server every `interval` seconds
      */
     startReporting: function () {
+      _interval = firstInterval;
       sendReport();
+      _interval = interval;
     }
   };
 
@@ -471,7 +478,7 @@ Record.prototype = {
       win.profiler.clear();
 
       sendReport();
-    }, interval * 1000);
+    }, _interval * 1000);
   };
 
 

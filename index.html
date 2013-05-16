@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Profiler</title>
-		<script>
-			window.__profiler__start__ = (new Date()).valueOf();
-		</script>
-		<script src="build/profiler.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <title>Profiler</title>
+    <script>
+      window.__profiler__start__ = (new Date()).valueOf();
+    </script>
+    <script src="build/profiler.js"></script>
     <script>
       profiler.start('test a');
       profiler.start('test a');
@@ -18,9 +18,15 @@
       profiler.end('test a');
       profiler.end('test a');
       profiler.end('test a');
+
+      profiler.setup({
+        url: 'http://google.com',
+        interval: 30,
+        firstInterval: 5
+      });
     </script>
-	</head>
-	<body>
-		Hello
-	</body>
+  </head>
+  <body>
+    Hello
+  </body>
 </html>
