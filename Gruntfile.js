@@ -1,3 +1,6 @@
+/**
+ * @TODO: use Google closure compiler
+ */
 module.exports = function(grunt) {
   'use strict';
 
@@ -10,13 +13,14 @@ module.exports = function(grunt) {
       build: {
         files: {
           'build/profiler.js': [
+            'src/browser/supports.js',
             'src/lang/typeof.js',
             'src/lang/each.js',
             'src/lang/filter.js',
-            'src/dom/event.js',
             'src/provider/http.js',
             'src/start.js',
             'src/record.js',
+            'src/report.js',
             'src/profiler.js'
           ]
         }
@@ -24,13 +28,14 @@ module.exports = function(grunt) {
       test: {
         files: {
           'build/profiler.test.js': [
+            'src/browser/supports.js',
             'src/lang/typeof.js',
             'src/lang/each.js',
             'src/lang/filter.js',
-            'src/dom/event.js',
             'src/provider/http.js',
             'src/start.js',
             'src/record.js',
+            'src/report.js',
             'src/profiler.js'
           ]
         }
@@ -86,15 +91,14 @@ module.exports = function(grunt) {
       }
     },
 
-    uglify: {
-      prod: {
-        files: {
-          'build/profiler.min.js': ['build/profiler.js']
-        },
-        options: {
-          mangle: false,
-          report: 'gzip'
-        }
+    watch: {
+      dev: {
+        files: [
+          'Gruntfile.js',
+          'src/**/*.js',
+          'src/*.js'
+        ],
+        tasks: ['default']
       }
     },
 
@@ -103,7 +107,7 @@ module.exports = function(grunt) {
         src: ['build/profiler.js'],
         dest: '',
         wrapper: [
-          ";(function (undefined) {\n'use strict';\n",
+          ';(function (undefined) {\n\'use strict\';\n',
           '\n}());'
         ]
       }
@@ -112,12 +116,12 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-uglify");
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-wrap');
 
   grunt.registerTask('build-dev', ['concat:build', 'wrap:all']);
-  grunt.registerTask('build-prod', ['build-dev', 'uglify:prod']);
+  grunt.registerTask('build-prod', ['build-dev']);
   grunt.registerTask('test-dev', ['build-dev', 'jasmine:dev']);
   grunt.registerTask('test-prod', ['build-prod', 'jasmine:prod']);
 

@@ -1,0 +1,28 @@
+{
+  "name": "profiler",
+  "preferGlobal": false,
+  "version": "0.5.0",
+  "author": "Dmitry Shimkin <dmitryshimkin@gmail.com>",
+  "description": "Client-side profiler designed for collecting performance info from real users",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmitryshimkin/profiler.git"
+  },
+  "keywords": [
+    "performance",
+    "profiler",
+    "client"
+  ],
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.4.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jasmine": "~0.4.2",
+    "grunt-template-jasmine-istanbul": "~0.2.3",
+    "grunt-contrib-jshint": "~0.5.4",
+    "grunt-wrap": "~0.2.0"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}

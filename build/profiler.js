@@ -1,5 +1,11 @@
 ;(function (undefined) {
 'use strict';
+var supports = supports || {};
+
+supports.performance = ('performance' in window);
+
+supports.timing = (supports.performance && 'timing' in window.performance);
+supports.memory = (supports.performance && 'memory' in window.performance);
 /**
  * Replacing typeof
  * @param arg {*} Any argument
@@ -94,72 +100,6 @@ var filter = (function (each, typeOf) {
     return result;
   };
 }(each, typeOf));
-/**
- * Attach event
- */
-var on = (function (doc) {
-  var slice = [].slice;
-  var supportW3C = 'addEventListener' in doc;
-  var on;
-
-  if (supportW3C) {
-    on = function (elem, eventName, handler, capture) {
-      return elem.addEventListener(eventName, handler, capture || false);
-    };
-  } else {
-    // todo: store links to original functions
-//    var fixEvent = function (evt) {
-//      // todo: fix event object
-//      return evt;
-//    };
-//
-//    var createHandler = function (handler) {
-//      return function () {
-//        var args = slice.apply(arguments);
-//        args[0] = fixEvent(args[0]);
-//        handler.call(this, args);
-//      }
-//    };
-//
-//    if ('attachEvent' in doc) {
-//      on = function (elem, eventName, handler) {
-//        return elem.attachEvent('on' + eventName, createHandler(handler));
-//      }
-//    } else {
-//      on = function (elem, eventName, handler) {
-//        elem['on' + eventName] = createHandler(handler);
-//      }
-//    }
-  }
-
-  return on;
-}(window.document));
-
-
-/**
- * Detach event
- */
-var off = (function (doc) {
-  var supportW3C = 'removeEventListener' in doc;
-  var off;
-
-  if (supportW3C) {
-    off = function (elem, eventName, handler) {
-      return elem.removeEventListener(eventName, handler);
-    };
-  } else {
-    // todo: implement
-//    if ('detachEvent' in doc) {
-//      off = function (elem, eventName, handler) {
-//        return elem.detachEvent(eventName, handler);
-//      }
-//    } else {
-//
-//    }
-  }
-
-  return off;
-}(window.document));
 var http = (function () {
   var win = window;
 
@@ -222,16 +162,9 @@ var http = (function () {
     }
   };
 }());
-var start;
-var supportsPerformance = ('performance' in window);
-var supportsTiming = (supportsPerformance && 'timing' in window.performance);
-var supportsMemory = (supportsPerformance && 'memory' in window.performance);
-
-if (supportsTiming && window.performance.timing.navigationStart) {
-  start = window.performance.timing.navigationStart;
-} else {
-  start = window.__profiler__start__ = window.__profiler__start__ || (new Date()).valueOf();
-}
+var start = (supports.timing && window.performance.timing.navigationStart)
+  ? window.performance.timing.navigationStart
+  : (new Date()).valueOf();
 var Record = function (name, tags) {
   this.name = name;
   this.tags = tags;
@@ -250,200 +183,14 @@ Record.prototype = {
     return this.name + ' ' + this.start + '-' + this.end + ' (' + this.duration + ')';
   }
 };
-(function (each, filter, on, off, start, Record) {
-  var win = window;
-  var doc = win.document;
-
-  var EVT_DOM_READY = 'DOMContentLoaded';
-  var EVT_LOAD = 'load';
-
-  var domReady, windowLoad;
-
-  var records = [];
-  var calls = {};
-  var index = {};
-  var timing = {};
-
-  var session = (new Date()).valueOf() + (Math.random() * 1000|0);
-
-  var url;
-  var interval = 30;
-  var firstInterval = 10;
-  var _interval;
-
-
-  /**
-   * Profiler
-   */
-  win.profiler = {
-    /**
-     * Remove all completed records
-     */
-    clear: function () {
-      records = getPending();
-      index = buildIndex();
-      calls = {};
-      timing = {};
-    },
-
-
-    /**
-     * Count something
-     * @param name {String} Name of counting object
-     */
-    count: function (name) {
-      calls[name] = calls[name] || 0;
-      calls[name]++;
-    },
-
-
-    /**
-     * Meter reflow using zero timeout
-     * @param name {String} Record name
-     * @param tags {Array} List of tags
-     */
-    reflow: function (name, tags) {
-      tags = tags || ['reflow'];
-      this.start(name, tags);
-      this.stop(name, true);
-    },
-
-
-    /**
-     * Add new record
-     * @param name {String} Record name
-     * @param tags {Array} List of tags
-     */
-    start: function (name, tags) {
-      var record = new Record(name, tags || ['script']);
-
-      records.push(record);
-      index[name] = index[name] || [];
-      index[name].push(record);
-    },
-
-
-    /**
-     * Stop record by name
-     * @param name {String} Record name
-     * @param async {Boolean} If true record will be stopped in zero timeout
-     */
-    stop: function (name, async) {
-      if (async) {
-        setTimeout(function () {
-          index[name].shift().complete();
-        }, 0);
-      } else {
-        index[name].shift().complete();
-      }
-    },
-
-
-    /**
-     * Alias for `stop`
-     */
-    end: function () {
-      this.stop.apply(this, arguments);
-    },
-
-
-    /**
-     * Returns records
-     */
-    report: function () {
-      return {
-        onready: domReady,
-        calls: calls,
-        memory: getMemoryInfo(),
-        records: getCompleted(),
-        timing: getTiming(),
-        onload: windowLoad
-      };
-    },
-
-
-    /**
-     * Reset profiler to default state
-     */
-    reset: function () {
-      records = [];
-      index = {};
-      calls = {};
-      timing = {};
-    },
-
-
-    /**
-     * Send report to server
-     */
-    send: function () {
-      if (url) {
-        var report = this.report();
-        http.post(url, {
-          calls: report.calls,
-          memory: report.memory,
-          records: report.records,
-          session: session,
-          timing: timing
-        });
-      }
-    },
-
-
-    /**
-     * Setup profiler
-     */
-    setup: function (params) {
-      url = params.url || url;
-      session = params.session || session;
-      interval = params.interval || interval;
-      firstInterval = params.firstInterval || firstInterval;
-
-      _interval = interval;
-    },
-
-
-    /**
-     * Starts reporting to server every `interval` seconds
-     */
-    startReporting: function () {
-      _interval = firstInterval;
-      sendReport();
-      _interval = interval;
-    }
+var report = (function () {
+  var getMemoryInfo = function () {
+    return supports.memory ? win.performance.memory : null;
   };
-
-
-  /*** Helpers ***/
-
-  var buildIndex = function () {
-    var index = {};
-    each(records, function (record) {
-      var name = record.name;
-      index[name] = index[name] || [];
-      index[name].push(record);
-    });
-    return index;
-  };
-
-
-  var getCompleted = function () {
-    return filter(records, function (record) {
-      return record.completed === true;
-    });
-  };
-
-
-  var getPending = function () {
-    return filter(records, function (record) {
-      return record.completed === false;
-    });
-  };
-
 
   var getTiming = function () {
     var timing = null;
-    if (supportsTiming) {
+    if (supports.performance) {
       timing = {};
       each(window.performance.timing, function (value, key) {
         if (value > 0) {
@@ -454,51 +201,207 @@ Record.prototype = {
     return timing;
   };
 
-
-  var getMemoryInfo = function () {
-    return supportsMemory ? win.performance.memory : null;
+  return function (info) {
+    return {
+      calls: info.calls,
+      memory: getMemoryInfo(),
+      records: info.records,
+      timing: getTiming()
+    };
   };
+}());
+
+var win = window;
+
+var records = [];
+var calls = {};
+var index = {};
+var timing = {};
+
+var session = (new Date()).valueOf() + (Math.random() * 1000|0);
+
+var url;
+var interval = 30;
+var firstInterval = 10;
+var _interval;
 
 
-  var onLoad = function () {
-    off(win, EVT_LOAD, onLoad);
-    windowLoad = (new Date()).valueOf() - start;
-    setTimeout(function () {
-      timing = getTiming();
-    }, 0);
-  };
+/**
+ * Profiler
+ */
+win.profiler = {
 
+  /**
+   * Remove all completed records
+   */
 
-  var onDomReady = function () {
-    off(doc, EVT_DOM_READY, onDomReady);
-    domReady = (new Date()).valueOf() - start;
-  };
+  clear: function () {
+    records = getPending();
+    index = buildIndex();
+    calls = {};
+    timing = {};
+  },
 
+  /**
+   * Count something
+   * @param name {String} Name of counting object
+   */
 
-  /*** Listen events ***/
+  count: function (name) {
+    calls[name] = calls[name] || 0;
+    calls[name]++;
+  },
 
-  on(doc, EVT_DOM_READY, onDomReady);
-  on(win, EVT_LOAD, onLoad);
+  /**
+   * Meter reflow using zero timeout
+   * @param name {String} Record name
+   * @param tags {Array} List of tags
+   */
 
+  reflow: function (name, tags) {
+    tags = tags || ['reflow'];
+    this.start(name, tags);
+    this.stop(name, true);
+  },
 
-  /** start reporting */
+  /**
+   * Add new record
+   * @param name {String} Record name
+   * @param tags {Array} List of tags
+   */
 
-  var sendReport = function () {
-    setTimeout(function () {
-      win.profiler.send();
-      win.profiler.clear();
+  start: function (name, tags) {
+    var record = new Record(name, tags || ['script']);
 
-      sendReport();
-    }, _interval * 1000);
-  };
+    records.push(record);
+    index[name] = index[name] || [];
+    index[name].push(record);
+  },
 
+  /**
+   * Stop record by name
+   * @param name {String} Record name
+   * @param async {Boolean} If true record will be stopped in zero timeout
+   */
 
-  /*** Clean-up ***/
+  stop: function (name, async) {
+    if (async) {
+      setTimeout(function () {
+        index[name].shift().complete();
+      }, 0);
+    } else {
+      index[name].shift().complete();
+    }
+  },
 
-  try {
-    delete window.__profiler__start__;
-  } catch (e) {
-    //
+  /**
+   * Alias for `stop`
+   */
+
+  end: function () {
+    this.stop.apply(this, arguments);
+  },
+
+  /**
+   * Returns records
+   */
+
+  report: function () {
+    return report({
+      calls: calls,
+      records: getCompleted()
+    });
+  },
+
+  /**
+   * Reset profiler to default state
+   */
+
+  reset: function () {
+    records = [];
+    index = {};
+    calls = {};
+    timing = {};
+  },
+
+  /**
+   * Send report to server
+   */
+
+  send: function () {
+    if (url) {
+      var report = this.report();
+      http.post(url, {
+        calls: report.calls,
+        memory: report.memory,
+        records: report.records,
+        session: session,
+        timing: timing
+      });
+    }
+  },
+
+  /**
+   * Setup profiler
+   */
+
+  setup: function (params) {
+    url = params.url || url;
+    session = params.session || session;
+    interval = params.interval || interval;
+    firstInterval = params.firstInterval || firstInterval;
+
+    _interval = interval;
+  },
+
+  /**
+   * Starts reporting to server every `interval` seconds
+   */
+
+  startReporting: function () {
+    _interval = firstInterval;
+    sendReport();
+    _interval = interval;
   }
-}(each, filter, on, off, start, Record));
+};
+
+
+/*** Helpers ***/
+
+var buildIndex = function () {
+  var index = {};
+  each(records, function (record) {
+    var name = record.name;
+    index[name] = index[name] || [];
+    index[name].push(record);
+  });
+  return index;
+};
+
+
+var getCompleted = function () {
+  return filter(records, function (record) {
+    return record.completed === true;
+  });
+};
+
+
+var getPending = function () {
+  return filter(records, function (record) {
+    return record.completed === false;
+  });
+};
+
+
+
+/** start reporting */
+
+var sendReport = function () {
+  setTimeout(function () {
+    win.profiler.send();
+    win.profiler.clear();
+
+    sendReport();
+  }, _interval * 1000);
+};
 }());
