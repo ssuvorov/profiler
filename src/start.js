@@ -1,3 +1,3 @@
-var start = (supports.timing && window.performance.timing.navigationStart)
-  ? window.performance.timing.navigationStart
+var start = (supports.performance && supports.performance.timing && window.performance.timing.navigationStart)
+  ? supports.performance.timing.navigationStart
   : (new Date()).valueOf();

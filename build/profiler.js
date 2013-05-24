@@ -2,10 +2,21 @@
 'use strict';
 var supports = supports || {};
 
-supports.performance = ('performance' in window);
+(function () {
+  var perf = window.performance || window.webkitPerformance ||
+    window.mozPerformance || window.msPerformance || false;
 
-supports.timing = (supports.performance && 'timing' in window.performance);
-supports.memory = (supports.performance && 'memory' in window.performance);
+  supports.performance = perf || false;
+
+  if (supports.performance) {
+    var getEntries = perf.getEntries || perf.webkitGetEntries || perf.mozGetEntries || perf.msGetEntries || false;
+
+    supports.performance.timing = 'timing' in perf;
+    supports.performance.memory = 'memory' in perf;
+    supports.performance.getEntries = getEntries || false;
+  }
+}());
+
 /**
  * Replacing typeof
  * @param arg {*} Any argument
@@ -162,8 +173,8 @@ var http = (function () {
     }
   };
 }());
-var start = (supports.timing && window.performance.timing.navigationStart)
-  ? window.performance.timing.navigationStart
+var start = (supports.performance && supports.performance.timing && window.performance.timing.navigationStart)
+  ? supports.performance.timing.navigationStart
   : (new Date()).valueOf();
 var Record = function (name, tags) {
   this.name = name;
@@ -185,18 +196,26 @@ Record.prototype = {
 };
 var report = (function (win) {
   var getMemoryInfo = function () {
-    return supports.memory ? win.performance.memory : null;
+    return supports.performance.memory ? win.performance.memory : null;
   };
 
   var getTiming = function () {
     var timing = null;
-    if (supports.performance) {
+    if (supports.performance && supports.performance.timing) {
       timing = {};
-      each(window.performance.timing, function (value, key) {
+      each(supports.performance.timing, function (value, key) {
         if (value > 0) {
           timing[key] = value - start;
         }
       });
+    }
+    return timing;
+  };
+
+  var getResourcesTiming = function () {
+    var timing = null;
+    if (supports.performance.getEntries) {
+      timing = supports.performance.getEntries();
     }
     return timing;
   };
@@ -206,6 +225,7 @@ var report = (function (win) {
       calls: info.calls,
       memory: getMemoryInfo(),
       records: info.records,
+      resources: getResourcesTiming(),
       timing: getTiming()
     };
   };

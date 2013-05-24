@@ -261,6 +261,7 @@
 
 
     // clear
+    // @TODO: check timing/memory/resources
     it('clear', function () {
       profiler.start('test a');
       profiler.start('test b');
