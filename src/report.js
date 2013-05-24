@@ -1,4 +1,4 @@
-var report = (function () {
+var report = (function (win) {
   var getMemoryInfo = function () {
     return supports.memory ? win.performance.memory : null;
   };
@@ -24,4 +24,4 @@ var report = (function () {
       timing: getTiming()
     };
   };
-}());
+}(window));
