@@ -1,5 +1,10 @@
 ;(function (undefined) {
 'use strict';
+
+/**
+ * Detect some browser feature supporting
+ */
+
 var supports = supports || {};
 
 (function () {
@@ -22,6 +27,7 @@ var supports = supports || {};
  * @param arg {*} Any argument
  * @return {String} Type of argument
  */
+
 var typeOf = (function () {
   var objectToString = Object.prototype.toString;
   var class2type = {};
@@ -48,6 +54,7 @@ var typeOf = (function () {
  *
  * @TODO: optimize by creating different versions depends on browser support
  */
+
 var each = (function (typeOf) {
   var supportsForEach = 'forEach' in Array.prototype;
 
@@ -71,6 +78,7 @@ var each = (function (typeOf) {
     }
   };
 }(typeOf));
+
 /**
  * Filter array or object
  * @todo: optimize by creating different versions depends on browser support
@@ -81,6 +89,7 @@ var each = (function (typeOf) {
  *
  * @return {Array|Object} New array or object contains filtered items
  */
+
 var filter = (function (each, typeOf) {
   var supportsFilter = 'filter' in Array.prototype;
 
@@ -111,8 +120,20 @@ var filter = (function (each, typeOf) {
     return result;
   };
 }(each, typeOf));
+
+/**
+ * @TODO: need refactoring
+ * Very simple http-provider
+ * for POST-requests
+ */
+
 var http = (function () {
   var win = window;
+
+  /**
+   * Creates XHR under browser
+   * and ActiveX under IE
+   */
 
   var createXhr = (function () {
     if (win.XMLHttpRequest) {
@@ -131,6 +152,11 @@ var http = (function () {
     }
   }());
 
+  /**
+   * Creates new XHR and sends request to server
+   * @param params {Object}
+   * @return {Object} XMLHttpRequest
+   */
 
   var sendRequest = function (params) {
     var xhr = createXhr();
@@ -173,9 +199,20 @@ var http = (function () {
     }
   };
 }());
-var start = (supports.performance && supports.performance.timing && window.performance.timing.navigationStart)
+
+/**
+ * Start point for all measurements
+ */
+
+var start = (supports.performance && supports.performance.timing && supports.performance.timing.navigationStart)
   ? supports.performance.timing.navigationStart
   : (new Date()).valueOf();
+
+/**
+ * Record constructor
+ * @TODO use window.performance.now
+ */
+
 var Record = function (name, tags) {
   this.name = name;
   this.tags = tags;
@@ -184,20 +221,44 @@ var Record = function (name, tags) {
 };
 
 Record.prototype = {
+
+  /**
+   * Calculate duration and set completed state.
+   */
+
   complete: function () {
     this.end = (new Date()).valueOf() - start;
     this.duration = this.end - this.start;
     this.completed = true;
   },
 
+  /**
+   * Pretty print
+   */
+
   toString: function () {
     return this.name + ' ' + this.start + '-' + this.end + ' (' + this.duration + ')';
   }
 };
+
+/**
+ * Simple reporter
+ * @TODO create convenient reporter for development profiling
+ */
+
 var report = (function (win) {
+
+  /**
+   * Gets memory info if available
+   */
+
   var getMemoryInfo = function () {
     return supports.performance.memory ? win.performance.memory : null;
   };
+
+  /**
+   * Gets timing info if available
+   */
 
   var getTiming = function () {
     var timing = null;
@@ -212,6 +273,10 @@ var report = (function (win) {
     return timing;
   };
 
+  /**
+   * Gets info about resources loading timings if available
+   */
+
   var getResourcesTiming = function () {
     var timing = null;
     if (supports.performance.getEntries) {
@@ -219,6 +284,10 @@ var report = (function (win) {
     }
     return timing;
   };
+
+  /**
+   * Reporter
+   */
 
   return function (info) {
     return {
@@ -230,6 +299,11 @@ var report = (function (win) {
     };
   };
 }(window));
+
+/**
+ * Profiler
+ */
+
 window.profiler = (function (win) {
   var records = [];
   var calls = {};
@@ -303,6 +377,7 @@ window.profiler = (function (win) {
 
     /**
      * Remove all completed records
+     * @TODO: properly clear timing
      */
 
     clear: function () {

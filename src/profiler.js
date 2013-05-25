@@ -1,3 +1,8 @@
+
+/**
+ * Profiler
+ */
+
 window.profiler = (function (win) {
   var records = [];
   var calls = {};
@@ -71,6 +76,7 @@ window.profiler = (function (win) {
 
     /**
      * Remove all completed records
+     * @TODO: properly clear timing
      */
 
     clear: function () {

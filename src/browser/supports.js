@@ -1,3 +1,8 @@
+
+/**
+ * Detect some browser feature supporting
+ */
+
 var supports = supports || {};
 
 (function () {

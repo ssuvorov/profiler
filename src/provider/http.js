@@ -1,5 +1,17 @@
+
+/**
+ * @TODO: need refactoring
+ * Very simple http-provider
+ * for POST-requests
+ */
+
 var http = (function () {
   var win = window;
+
+  /**
+   * Creates XHR under browser
+   * and ActiveX under IE
+   */
 
   var createXhr = (function () {
     if (win.XMLHttpRequest) {
@@ -18,6 +30,11 @@ var http = (function () {
     }
   }());
 
+  /**
+   * Creates new XHR and sends request to server
+   * @param params {Object}
+   * @return {Object} XMLHttpRequest
+   */
 
   var sendRequest = function (params) {
     var xhr = createXhr();

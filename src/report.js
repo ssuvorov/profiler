@@ -1,7 +1,22 @@
+
+/**
+ * Simple reporter
+ * @TODO create convenient reporter for development profiling
+ */
+
 var report = (function (win) {
+
+  /**
+   * Gets memory info if available
+   */
+
   var getMemoryInfo = function () {
     return supports.performance.memory ? win.performance.memory : null;
   };
+
+  /**
+   * Gets timing info if available
+   */
 
   var getTiming = function () {
     var timing = null;
@@ -16,6 +31,10 @@ var report = (function (win) {
     return timing;
   };
 
+  /**
+   * Gets info about resources loading timings if available
+   */
+
   var getResourcesTiming = function () {
     var timing = null;
     if (supports.performance.getEntries) {
@@ -23,6 +42,10 @@ var report = (function (win) {
     }
     return timing;
   };
+
+  /**
+   * Reporter
+   */
 
   return function (info) {
     return {

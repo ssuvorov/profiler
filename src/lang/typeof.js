@@ -1,8 +1,10 @@
+
 /**
  * Replacing typeof
  * @param arg {*} Any argument
  * @return {String} Type of argument
  */
+
 var typeOf = (function () {
   var objectToString = Object.prototype.toString;
   var class2type = {};

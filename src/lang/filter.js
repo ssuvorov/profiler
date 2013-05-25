@@ -1,3 +1,4 @@
+
 /**
  * Filter array or object
  * @todo: optimize by creating different versions depends on browser support
@@ -8,6 +9,7 @@
  *
  * @return {Array|Object} New array or object contains filtered items
  */
+
 var filter = (function (each, typeOf) {
   var supportsFilter = 'filter' in Array.prototype;
 

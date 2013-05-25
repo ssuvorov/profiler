@@ -1,3 +1,4 @@
+
 /**
  * @require typeOf
  *
@@ -6,6 +7,7 @@
  *
  * @TODO: optimize by creating different versions depends on browser support
  */
+
 var each = (function (typeOf) {
   var supportsForEach = 'forEach' in Array.prototype;
 
