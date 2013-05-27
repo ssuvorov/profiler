@@ -5,6 +5,7 @@
   var expect = window.expect;
   var it = window.it;
 
+
   var longOperation = function () {
     for (var i = 0, a; i < 1000000; i++) {
       a = i*i;
@@ -17,6 +18,11 @@
     }
   };
 
+
+  /**
+   * Profiler
+   */
+
   describe('profiler', function () {
     beforeEach(function () {
       profiler.reset();
@@ -24,26 +30,50 @@
     });
 
 
-    // existing
-    it('exist', function () {
-      expect(profiler).toBeDefined();
-    });
+    /**
+     * Reports
+     */
+
+    describe('reports', function () {
+
+      // timings
+      it('should contain timing info', function () {
+        var report = profiler.report();
+        expect(report.timing).toBeDefined(true);
+        expect(report.timing).toEqual(window.TIMING_FIXTURE);
+      });
 
 
-    // add record
-    it('record', function () {
-      profiler.start('test');
-      longOperation();
-      profiler.stop('test');
+      // memory
+      it('should contain memory info', function () {
+        var report = profiler.report();
+        expect(report.memory).toBeDefined(true);
+        expect(report.memory).toEqual(window.MEMORY_FIXTURE);
+      });
 
-      var records = profiler.report().records;
+      // resources
+      it('should contain resources loading info', function () {
+        var report = profiler.report();
+        expect(report.resources).toBeDefined(true);
+        expect(report.resources).toEqual(window.RESOURCE_FIXTURE);
+      });
 
-      expect(records.length).toBe(1);
-      expect(records[0].name).toBe('test');
-      expect(records[0].start).toBeGreaterThan(0);
-      expect(records[0].end).toBeGreaterThan(0);
-      expect(records[0].start).toBeLessThan(records[0].end);
-      expect(records[0].duration).toBeGreaterThan(0);
+      // records
+      it('should contain added records', function () {
+        profiler.start('test');
+        longOperation();
+        profiler.stop('test');
+
+        var records = profiler.report().records;
+
+        expect(records.length).toBe(1);
+        expect(records[0].name).toBe('test');
+        expect(records[0].start).toBeGreaterThan(0);
+        expect(records[0].end).toBeGreaterThan(0);
+        expect(records[0].start).toBeLessThan(records[0].end);
+        expect(records[0].duration).toBeGreaterThan(0);
+      });
+
     });
 
 
@@ -259,9 +289,10 @@
       expect(records[0].name).toBe('test b');
     });
 
+    /**
+     * Clear
+     */
 
-    // clear
-    // @TODO: check timing/memory/resources
     it('clear', function () {
       profiler.start('test a');
       profiler.start('test b');
@@ -279,8 +310,10 @@
       expect(report.records[0].name).toBe('test a');
     });
 
+    /**
+     * Calls
+     */
 
-    // count calls
     it('count calls', function () {
       profiler.count('test a');
       profiler.start('test a'); // shouldn't be incremented
@@ -297,28 +330,36 @@
       expect(calls['test c']).toBe(1);
     });
 
+    /**
+     * Reporting to server
+     */
 
-    // send every n seconds
-    it('reporting to server', function () {
-      // TBD
+    describe('reporting to server', function () {
+
+      // start on startReporting
+
+
+      // url
+      it('proper interval', function () {
+        // check url
+      });
+
+      // interval
+      it('proper interval', function () {
+        // check first interval
+        // check other intervals
+      });
+
+
+      // first report
+//      it('report on send', function () {
+//        // TBD
+//      });
+
+      // other reports
+      
+
     });
 
-
-    // setup
-    it('setup', function () {
-      // TBD
-    });
-
-
-    // report on send
-    it('report on send', function () {
-      // TBD
-    });
-
-
-    // timing
-    it('timing', function () {
-      // TBD
-    });
   });
 }());

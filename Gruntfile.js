@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     },
 
     concat: {
-      build: {
+      dev: {
         files: {
           'build/profiler.js': [
             'src/browser/supports.js',
@@ -28,6 +28,7 @@ module.exports = function(grunt) {
       test: {
         files: {
           'build/profiler.test.js': [
+            'test/fixture/performance.js',
             'src/browser/supports.js',
             'src/lang/typeof.js',
             'src/lang/each.js',
@@ -120,9 +121,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-wrap');
 
-  grunt.registerTask('build-dev', ['concat:build', 'wrap:all']);
+  grunt.registerTask('build-dev', ['concat:dev', 'wrap']);
+  grunt.registerTask('build-test', ['concat:test', 'wrap']);
   grunt.registerTask('build-prod', ['build-dev']);
-  grunt.registerTask('test-dev', ['build-dev', 'jasmine:dev']);
+  grunt.registerTask('test-dev', ['build-test', 'jasmine:dev']);
   grunt.registerTask('test-prod', ['build-prod', 'jasmine:prod']);
 
   grunt.registerTask('test', ['test-dev']);
