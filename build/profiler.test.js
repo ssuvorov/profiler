@@ -7,6 +7,16 @@ window.performance = {
   memory: MEMORY_FIXTURE,
   getEntries: RESOURCE_FIXTURE
 };
+window.XMLHttpRequest = function () {};
+
+window.XMLHttpRequest.prototype = {
+	open: function () {
+
+	},
+	send: function () {
+		// send
+	}
+};
 
 /**
  * Detect some browser feature supporting

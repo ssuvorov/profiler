@@ -337,6 +337,15 @@
     describe('reporting to server', function () {
 
       // start on startReporting
+      it('startReporting', function () {
+        profiler.setup({
+          url: 'test-url'
+        });
+
+        //profiler.start
+
+      });
+
 
 
       // url
@@ -357,7 +366,7 @@
 //      });
 
       // other reports
-      
+
 
     });
 

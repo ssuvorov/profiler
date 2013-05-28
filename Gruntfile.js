@@ -29,6 +29,7 @@ module.exports = function(grunt) {
         files: {
           'build/profiler.test.js': [
             'test/fixture/performance.js',
+            'test/fixture/xhr.js',
             'src/browser/supports.js',
             'src/lang/typeof.js',
             'src/lang/each.js',
