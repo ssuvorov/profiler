@@ -1,9 +1,12 @@
 (function (undefined) {
   var profiler = window.profiler;
+  var AAA = window.__AAA__;
 
   var describe = window.describe;
   var expect = window.expect;
   var it = window.it;
+  var runs = window.runs;
+  var waitsFor = window.waitsFor;
 
 
   var longOperation = function () {
@@ -29,6 +32,13 @@
       spyOn(profiler, 'send');
     });
 
+    /**
+     * Existing
+     */
+
+    it('should exist', function () {
+      expect(profiler).toBeDefined();
+    });
 
     /**
      * Reports
@@ -40,9 +50,9 @@
       it('should contain timing info', function () {
         var report = profiler.report();
         expect(report.timing).toBeDefined(true);
-        expect(report.timing).toEqual(window.TIMING_FIXTURE);
+        expect(typeof report.timing.a).toEqual('number');
+        expect(typeof report.timing.b).toEqual('number');
       });
-
 
       // memory
       it('should contain memory info', function () {
@@ -55,7 +65,7 @@
       it('should contain resources loading info', function () {
         var report = profiler.report();
         expect(report.resources).toBeDefined(true);
-        expect(report.resources).toEqual(window.RESOURCE_FIXTURE);
+        expect(report.resources).toEqual(window.RESOURCE_FIXTURE());
       });
 
       // records
@@ -76,7 +86,6 @@
 
     });
 
-
     // reset
     it('reset', function () {
       profiler.start('test a');
@@ -96,7 +105,6 @@
       expect(Object.keys(report.records).length).toBe(0);
       expect(Object.keys(report.calls).length).toBe(0);
     });
-
 
     // many records
     it('many records', function () {
@@ -130,7 +138,6 @@
       expect(records[1].end).toBeGreaterThan(records[1].start);
       expect(records[2].end).toBeGreaterThan(records[2].start);
     });
-
 
     // async records
     it('async records', function () {
@@ -181,7 +188,6 @@
       });
     });
 
-
     // async stop
     it('async stop', function () {
       profiler.start('test async a');
@@ -204,7 +210,6 @@
       });
     });
 
-
     // reflow
     it('reflow', function () {
       profiler.start('test');
@@ -226,8 +231,7 @@
       });
     });
 
-
-    // some records have the same name
+    // the same name
     it('some records have the same name', function () {
       var done;
       var a;
@@ -276,8 +280,7 @@
       });
     });
 
-
-    // report contains only completed records
+    // only completed records
     it('not completed records in report', function () {
       profiler.start('test a');
       profiler.start('test b');
@@ -336,15 +339,32 @@
 
     describe('reporting to server', function () {
 
-      // start on startReporting
-      it('startReporting', function () {
-        profiler.setup({
-          url: 'test-url'
-        });
-
-        //profiler.start
-
+      // fixture
+      it('xhr should be a fixture', function () {
+        expect(window.XMLHttpRequest.fixture).toBe(true);
       });
+
+//      // start on startReporting
+//      it('startReporting', function () {
+//        profiler.setup({
+//          firstInterval: 2,
+//          interval: 5,
+//          url: 'test-url'
+//        });
+//
+//        profiler.startReporting();
+//
+//        runs(function() {
+//          //
+//        });
+//
+//        waitsFor(function() {
+//          return done;
+//        }, 'timeout', 5000);
+//
+//        expect(window.XMLHttpRequest)
+//
+//      });
 
 
 

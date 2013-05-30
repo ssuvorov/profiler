@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 
     jasmine: {
       dev: {
-        src: 'build/profiler.js',
+        src: 'build/profiler.test.js',
         options: {
           specs: 'test/specs/profiler.spec.js',
           template: require('grunt-template-jasmine-istanbul'),

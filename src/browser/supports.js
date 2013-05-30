@@ -14,8 +14,8 @@ var supports = supports || {};
   if (supports.performance) {
     var getEntries = perf.getEntries || perf.webkitGetEntries || perf.mozGetEntries || perf.msGetEntries || false;
 
-    supports.performance.timing = 'timing' in perf;
-    supports.performance.memory = 'memory' in perf;
+    supports.performance.timing = perf.timing;
+    supports.performance.memory = perf.memory;
     supports.performance.getEntries = getEntries || false;
   }
 }());

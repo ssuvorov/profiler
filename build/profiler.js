@@ -14,6 +14,60 @@
 'use strict';
 ;(function (undefined) {
 'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
+;(function (undefined) {
+'use strict';
 
 /**
  * Detect some browser feature supporting
@@ -534,6 +588,33 @@ window.profiler = (function (win) {
 
   };
 }(window));
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
+}());
 }());
 }());
 }());

@@ -1,19 +1,37 @@
 window.TIMING_FIXTURE = { a: 1, b: 2 };
 window.MEMORY_FIXTURE = { a: 1, b: 2 };
-window.RESOURCE_FIXTURE = ['a', 'b'];
+window.RESOURCE_FIXTURE = function () {
+  return ['a', 'b'];
+};
 
 window.performance = {
   timing: TIMING_FIXTURE,
   memory: MEMORY_FIXTURE,
   getEntries: RESOURCE_FIXTURE
 };
-window.XMLHttpRequest = function () {};
+window.XMLHttpRequest = function () {
+  this.readyState = 0; // UNSENT
+};
+
+window.XMLHttpRequest.instances = [];
+window.XMLHttpRequest.fixture = true;
 
 window.XMLHttpRequest.prototype = {
-	open: function () {
+	open: function (method, url, async) {
+    if (this.readyState !== 0) {
+      throw new Error("Repeated open");
+    }
 
+    this.readyState = 1; //OPENED
+    this.method = method;
+    this.url = url;
+    this.async = async;
+
+    window.XMLHttpRequest.instances.push(this);
 	},
+
 	send: function () {
+    console.log('send');
 		// send
 	}
 };
@@ -33,8 +51,8 @@ var supports = supports || {};
   if (supports.performance) {
     var getEntries = perf.getEntries || perf.webkitGetEntries || perf.mozGetEntries || perf.msGetEntries || false;
 
-    supports.performance.timing = 'timing' in perf;
-    supports.performance.memory = 'memory' in perf;
+    supports.performance.timing = perf.timing;
+    supports.performance.memory = perf.memory;
     supports.performance.getEntries = getEntries || false;
   }
 }());
