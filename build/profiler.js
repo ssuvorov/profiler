@@ -1,73 +1,5 @@
 ;(function (undefined) {
 'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
-;(function (undefined) {
-'use strict';
 
 /**
  * Detect some browser feature supporting
@@ -84,8 +16,8 @@ var supports = supports || {};
   if (supports.performance) {
     var getEntries = perf.getEntries || perf.webkitGetEntries || perf.mozGetEntries || perf.msGetEntries || false;
 
-    supports.performance.timing = 'timing' in perf;
-    supports.performance.memory = 'memory' in perf;
+    supports.performance.timing = perf.timing;
+    supports.performance.memory = perf.memory;
     supports.performance.getEntries = getEntries || false;
   }
 }());
@@ -384,6 +316,7 @@ window.profiler = (function (win) {
   var interval = 30;
   var firstInterval = 10;
   var _interval;
+  var timingSent = false;
 
   var SEND = false;
 
@@ -544,13 +477,13 @@ window.profiler = (function (win) {
     send: function () {
       if (url) {
         var report = this.report();
-        http.post(url, {
-          calls: report.calls,
-          memory: report.memory,
-          records: report.records,
-          session: session,
-          timing: timing
-        });
+        if (timingSent) {
+          delete report.timing;
+          delete report.resources;
+        } else {
+          timingSent = true;
+        }
+        http.post(url, report);
       }
     },
 
@@ -585,41 +518,6 @@ window.profiler = (function (win) {
     stopReporting: function () {
       SEND = false;
     }
-
   };
 }(window));
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
-}());
 }());

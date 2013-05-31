@@ -20,7 +20,7 @@ window.XMLHttpRequest.prototype = {
 	},
 
 	send: function () {
-    console.log('send');
+    //console.log('send');
 		// send
 	}
 };

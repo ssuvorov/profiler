@@ -15,6 +15,7 @@ window.profiler = (function (win) {
   var interval = 30;
   var firstInterval = 10;
   var _interval;
+  var timingSent = false;
 
   var SEND = false;
 
@@ -175,13 +176,13 @@ window.profiler = (function (win) {
     send: function () {
       if (url) {
         var report = this.report();
-        http.post(url, {
-          calls: report.calls,
-          memory: report.memory,
-          records: report.records,
-          session: session,
-          timing: timing
-        });
+        if (timingSent) {
+          delete report.timing;
+          delete report.resources;
+        } else {
+          timingSent = true;
+        }
+        http.post(url, report);
       }
     },
 
@@ -216,6 +217,5 @@ window.profiler = (function (win) {
     stopReporting: function () {
       SEND = false;
     }
-
   };
 }(window));

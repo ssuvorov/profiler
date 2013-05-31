@@ -344,40 +344,47 @@
         expect(window.XMLHttpRequest.fixture).toBe(true);
       });
 
-//      // start on startReporting
-//      it('startReporting', function () {
-//        profiler.setup({
+      // start on startReporting
+//      it('should starts when method startReporting is called', function () {
+//        var opened;
+//
+//        window.profiler.setup({
 //          firstInterval: 2,
 //          interval: 5,
-//          url: 'test-url'
+//          url: 'http://test-url.local'
 //        });
 //
-//        profiler.startReporting();
+//        window.profiler.startReporting();
 //
-//        runs(function() {
-//          //
+//        runs(function () {
+//          setTimeout(function () {
+//           // if (window.AAA === 'a') {
+//              opened = true;
+//           // }
+//          }, 3000);
 //        });
 //
-//        waitsFor(function() {
-//          return done;
-//        }, 'timeout', 5000);
+//        waitsFor(function () {
+//          return opened;
+//        }, 'timeout', 4000);
 //
-//        expect(window.XMLHttpRequest)
-//
+//        runs(function () {
+//          expect(window.XMLHttpRequest.fixture).toBe(true);
+//        });
 //      });
 
 
 
       // url
-      it('proper interval', function () {
-        // check url
-      });
-
-      // interval
-      it('proper interval', function () {
-        // check first interval
-        // check other intervals
-      });
+//      it('proper interval', function () {
+//        // check url
+//      });
+//
+//      // interval
+//      it('proper interval', function () {
+//        // check first interval
+//        // check other intervals
+//      });
 
 
       // first report
